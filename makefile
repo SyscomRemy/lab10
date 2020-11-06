@@ -9,27 +9,30 @@ else
 	MODE= Mode Release
 endif
 
-$(info $(MODE))
-
 max.o : max.c
+	@echo "$(MODE)"
 	${CC} ${CC_OPTIONS} -c $^
 min.o : min.c
+	@echo "$(MODE)"
 	${CC} ${CC_OPTIONS} -c $^
 
 variance.o : variance.c
+	@echo "$(MODE)"
 	${CC} ${CC_OPTIONS} -c $^
 
 test.o : test.c
+	@echo "$(MODE)"
 	${CC} ${CC_OPTIONS} -c $^
 
 test.exe : test.o ${OBJ}
+	@echo "$(MODE)"
 	${CC} ${CC_OPTIONS} -o $@ $< ${OBJ}
 
 clean:
-	rm *.c
+	@rm *.c
 
 clean2: *.o
-	rm *.o
+	@rm *.o
 	
 install :
 	mv *.exe /home/bardiau
