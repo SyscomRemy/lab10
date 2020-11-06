@@ -1,0 +1,181 @@
+CR Lab 10
+
+1)
+cp ../lab7/examen/max.c max.c
+cp ../lab7/examen/max.h max.h
+cp ../lab7/examen/min.c min.c
+cp ../lab7/examen/min.h min.h
+cp ../lab7/examen/variance.c variance.c
+cp ../lab7/examen/variance.h variance.h
+
+2)
+
+vim makefile 
+
+max.o : max.c
+        gcc -Wall -c max.c
+
+min.o : min.c
+        gcc -Wall -c min.c
+
+variance.o : variance.c
+        gcc -Wall -c variance.c
+
+test.o : test.c
+        gcc -Wall -c test.c
+
+test.exe : test.o max.o min.o variance.o
+        gcc -Wall -o test.exe test.o max.o min.o variance.o
+
+clean:
+        rm *.c
+        
+install :
+        mv *.exe /home/bardiau
+3)
+make: exécute la première instruction du fichier makefile
+
+make install : déplace le fichier .exe dans /home/bardiau mais comme on n'a pas encore exécuter la génération de l'exécutable cette commande ne marche pas
+
+make min.o: compile le fichier source min.c en créant un fichier objet
+
+make clean: supprime tout les fichiers sources qui sont inutiles après avoir genérer leurs binaire.
+
+Lorqu'on ne précise pas la cible c'est la première ligne du fichier makefile quiest exécuter par défaut.
+
+4)
+CC= gcc
+OBJ= max.o min.o variance.o
+CC_OPTIONS= //
+max.o : max.c
+        ${CC} -Wall -c max.c
+
+min.o : min.c
+        ${CC} -Wall -c min.c
+
+variance.o : variance.c
+        ${CC} -Wall -c variance.c
+
+test.o : test.c
+        ${CC} -Wall -c test.c
+
+clean:
+        rm *.c
+
+test.exe : test.o ${OBJ}
+        ${CC} -Wall -o test.exe test.o ${OBJ}
+
+clean2: *.o
+        rm *.o
+        
+install :
+        mv *.exe /home/bardiau
+
+Compilation: make test.exe
+Exécution: ./test.exe (Le programme fonctionne bien).
+
+5)
+
+CC=gcc
+OBJ=max.o min.o variance.o
+CC_OPTIONS=-g -Wall
+max.o : max.c
+        ${CC} ${CC_OPTIONS} -c max.c
+min.o : min.c
+        ${CC} ${CC_OPTIONS} -c min.c
+
+variance.o : variance.c
+        ${CC} ${CC_OPTIONS} -c variance.c
+
+test.o : test.c
+        ${CC} ${CC_OPTIONS} -c test.c
+
+clean:
+        rm *.c
+
+test.exe : test.o ${OBJ}
+        ${CC} ${CC_OPTIONS} -o test.exe test.o ${OBJ}
+
+clean2: *.o
+        rm *.o
+        
+install :
+        mv *.exe /home/bardiau
+        
+Vérifions: make CC_OPTIONS = '-Wall'
+Compile par défaut la première ligne de commande avec l'option -Wall
+affichie gcc -Wall -c max.c
+
+Vérifions: make CC_OPTIONS = '-g'
+Compile par défaut la première ligne de commande avec l'option -g
+affichie gcc -g -c max.c
+
+6)
+CC=gcc
+OBJ=max.o min.o variance.o
+CC_OPTIONS=-g -Wall
+max.o : max.c
+        ${CC} ${CC_OPTIONS} -c $^
+min.o : min.c
+        ${CC} ${CC_OPTIONS} -c $^
+
+variance.o : variance.c
+        ${CC} ${CC_OPTIONS} -c $^
+
+test.o : test.c
+        ${CC} ${CC_OPTIONS} -c $^
+
+clean:
+        rm *.c
+
+test.exe : test.o ${OBJ}
+        ${CC} ${CC_OPTIONS} -o $@ $< ${OBJ}
+
+clean2: *.o
+        rm *.o
+        
+install :
+        mv *.exe /home/bardiau
+        
+Toutes les lignes de commande sont fonctionelle.
+
+7)
+CC= gcc
+OBJ=max.o min.o variance.o
+
+ifeq (${DEBUG},yes)
+        CC_OPTIONS=-g -Wall
+else
+        CC_OPTIONS=
+endif
+
+max.o : max.c       
+        ${CC} ${CC_OPTIONS} -c $^
+min.o : min.c
+        ${CC} ${CC_OPTIONS} -c $^
+
+variance.o : variance.c
+        ${CC} ${CC_OPTIONS} -c $^
+
+test.o : test.c
+        ${CC} ${CC_OPTIONS} -c $^
+
+clean:
+        rm *.c
+
+test.exe : test.o ${OBJ}
+        ${CC} ${CC_OPTIONS} -o $@ $< ${OBJ}
+
+clean2: *.o
+        rm *.o
+        
+install :
+        mv *.exe /home/bardiau
+
+initialisation de la variable DEBUG avec genération du fichier .exe:
+ make test.exe DEBUG=yes ou no
+
+8)
+make test.exe DEBUG=yes (Mode Debug)
+make test.exe DEBUG=no (par exemple) (Mode Release)
+                                
