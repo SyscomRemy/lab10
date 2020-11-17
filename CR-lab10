@@ -27,11 +27,11 @@ test.o : test.c
 test.exe : test.o max.o min.o variance.o
         gcc -Wall -o test.exe test.o max.o min.o variance.o
 
-clean:
-        rm *.c
+clean: *.o
+        rm *.o
         
-install :
-        mv *.exe /home/bardiau
+install : test.exe
+        mv $< $(HOME)
 3)
 make: exécute la première instruction du fichier makefile
 
@@ -39,9 +39,9 @@ make install : déplace le fichier .exe dans /home/bardiau mais comme on n'a pas
 
 make min.o: compile le fichier source min.c en créant un fichier objet
 
-make clean: supprime tout les fichiers sources qui sont inutiles après avoir genérer leurs binaire.
+make clean: supprime tout les fichiers objets qui sont inutiles après avoir creer l'exécutable.
 
-Lorqu'on ne précise pas la cible c'est la première ligne du fichier makefile quiest exécuter par défaut.
+Lorqu'on ne précise pas la cible c'est la première ligne du fichier makefile qui est exécuter par défaut.
 
 4)
 CC= gcc
@@ -59,17 +59,14 @@ variance.o : variance.c
 test.o : test.c
         ${CC} -Wall -c test.c
 
-clean:
-        rm *.c
-
 test.exe : test.o ${OBJ}
         ${CC} -Wall -o test.exe test.o ${OBJ}
 
-clean2: *.o
+clean: *.o
         rm *.o
         
-install :
-        mv *.exe /home/bardiau
+install : test.exe
+        mv $< $(HOME)
 
 Compilation: make test.exe
 Exécution: ./test.exe (Le programme fonctionne bien).
@@ -90,17 +87,14 @@ variance.o : variance.c
 test.o : test.c
         ${CC} ${CC_OPTIONS} -c test.c
 
-clean:
-        rm *.c
-
 test.exe : test.o ${OBJ}
         ${CC} ${CC_OPTIONS} -o test.exe test.o ${OBJ}
 
-clean2: *.o
+clean: *.o
         rm *.o
         
-install :
-        mv *.exe /home/bardiau
+install : test.exe
+        mv $< $(HOME)
         
 Vérifions: make CC_OPTIONS = '-Wall'
 Compile par défaut la première ligne de commande avec l'option -Wall
@@ -125,17 +119,14 @@ variance.o : variance.c
 test.o : test.c
         ${CC} ${CC_OPTIONS} -c $^
 
-clean:
-        rm *.c
-
 test.exe : test.o ${OBJ}
         ${CC} ${CC_OPTIONS} -o $@ $< ${OBJ}
 
-clean2: *.o
-        rm *.o
+clean: *.o
+	rm *.o
         
-install :
-        mv *.exe /home/bardiau
+install : test.exe
+        mv $< $(HOME)
         
 Toutes les lignes de commande sont fonctionelle.
 
@@ -160,17 +151,15 @@ variance.o : variance.c
 test.o : test.c
         ${CC} ${CC_OPTIONS} -c $^
 
-clean:
-        rm *.c
 
 test.exe : test.o ${OBJ}
         ${CC} ${CC_OPTIONS} -o $@ $< ${OBJ}
 
-clean2: *.o
-        rm *.o
+clean: *.o
+	rm *.o
         
-install :
-        mv *.exe /home/bardiau
+install : test.exe
+        mv $< $(HOME)
 
 initialisation de la variable DEBUG avec genération du fichier .exe:
  make test.exe DEBUG=yes ou no
@@ -191,33 +180,28 @@ else
         MODE= Mode Release
 endif
 
-max.o : max.c
+mode : test.exe
         @echo "$(MODE)"
+
+max.o : max.c
         ${CC} ${CC_OPTIONS} -c $^
 min.o : min.c
-        @echo "$(MODE)"
         ${CC} ${CC_OPTIONS} -c $^
 
 variance.o : variance.c
-        @echo "$(MODE)"
         ${CC} ${CC_OPTIONS} -c $^
 
 test.o : test.c
-        @echo "$(MODE)"
         ${CC} ${CC_OPTIONS} -c $^
 
 test.exe : test.o ${OBJ}
-        @echo "$(MODE)"
         ${CC} ${CC_OPTIONS} -o $@ $< ${OBJ}
 
-clean:
-        @rm *.c
-
-clean2: *.o
+clean: *.o
         @rm *.o
         
-install :
-        mv *.exe /home/bardiau
+install : test.exe
+        mv $< $(HOME)
                                                                                                                                                                                                        
-En fonction de la variable DEBUG ce programme affiche soit Mode Debug ou Release pour chaque compilation   
+En fonction de la variable DEBUG ce programme affiche soit Mode Debug ou Release  
                                 FIN DES LABS
